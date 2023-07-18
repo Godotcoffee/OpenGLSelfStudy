@@ -53,12 +53,7 @@ _deps
 *-prefix/
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+.vscode/
 
 # Local History for Visual Studio Code
 .history/
@@ -70,5 +65,7 @@ _deps
 # Ignore all local history of files
 .history
 .ionide
+
+build/
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudiocode,cmake
