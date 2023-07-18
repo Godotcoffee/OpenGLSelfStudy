@@ -10,7 +10,8 @@ This project mainly contains example codes and exercises that I wrote while lear
 
 These example codes were written and tested under the following environments:
 
-- System: Windows 11
+- Operation System: Windows 11
+- Build Tool: CMake
 - Compiler: GCC (via MinGW)
 - OpenGL libraries: GLFW, GLAD
 - Image Library: stb_image
