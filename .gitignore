@@ -30,6 +30,8 @@
 *.a
 *.lib
 
+!third_party/glfw/bin/libglfw3.a
+
 # Executables
 *.exe
 *.out
