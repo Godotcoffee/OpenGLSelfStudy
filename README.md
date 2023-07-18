@@ -13,5 +13,5 @@ These example codes were written and tested under the following environments:
 - Operation System: Windows 11
 - Build Tool: CMake
 - Compiler: GCC (via MinGW)
-- OpenGL libraries: GLFW, GLAD
+- OpenGL Libraries: GLFW, GLAD
 - Image Library: stb_image
