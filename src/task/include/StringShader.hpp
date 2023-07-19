@@ -1,3 +1,6 @@
+#ifndef StringShader_HPP
+#define StringShader_HPP
+
 #include <string>
 
 class StringShader
@@ -13,3 +16,5 @@ public:
     unsigned int getId() const;
     virtual ~StringShader() = default;
 };
+
+#endif

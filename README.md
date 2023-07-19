@@ -15,3 +15,4 @@ These example codes were written and tested under the following environments:
 - Compiler: GCC (via MinGW)
 - OpenGL Libraries: GLFW, GLAD
 - Image Library: stb_image
+- Mathematics Library: GLM

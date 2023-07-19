@@ -5,7 +5,6 @@
 #include "task4.hpp"
 #include "FileShader.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #define STR(str) #str
