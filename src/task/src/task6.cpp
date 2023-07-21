@@ -219,10 +219,10 @@ int main6(int argc, char const *argv[])
             auto time = glfwGetTime();
             int time_ms = (int) (time * 1000);
             float angle = 0.0f;
-
-            auto ratio = (time_ms % 5000) / 5000.0f * 24.0f - 12.0f;
-            auto test  =exp(ratio) / (1 + exp(ratio)) ;
-            angle = (i + 1) * 15.0f + exp(ratio) / (1 + exp(ratio)) * 48.0f * -15.0f;
+            int gap = 5000;
+            auto ratio = (time_ms % gap) / (float) gap * 24.0f - 12.0f;
+            auto trans = exp(ratio) / (1 + exp(ratio)) * gap + time_ms / gap * gap;
+            angle = (i + 1) * 15.0f + trans * 0.01 * -15.0f;
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
