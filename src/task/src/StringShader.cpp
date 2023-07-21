@@ -70,3 +70,8 @@ unsigned int StringShader::getId() const
 {
     return _shaderId;
 }
+
+GLint StringShader::getUniformLoc(const std::string &name) const
+{
+    return glGetUniformLocation(_shaderId, name.c_str());
+}
