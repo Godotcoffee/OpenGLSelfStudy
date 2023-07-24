@@ -26,8 +26,12 @@ FileShader::FileShader(const std::string &vertexFile, const std::string &fragmen
 
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
-    } catch(std::ifstream::failure e) {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+    } catch(const std::ifstream::failure& e) {
+        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ::IFSTREAM_FAILURE" << "\n"
+                  << "Details: " << e.what() << std::endl;
+    } catch(const std::system_error& e) {
+        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ::SYSTEM_ERROR" << "\n"
+                  << "Details: " << e.what() << std::endl;
     }
     const char *vertexSrcAddr = vertexCode.c_str();
     const char *fragmentSrcAddr = fragmentCode.c_str();

@@ -4,9 +4,12 @@
 #include "task4.hpp"
 #include "task5.hpp"
 #include "task6.hpp"
+#include "task7.hpp"
+
+#include <iostream>
 
 int main(int argc, char const *argv[])
 {
-    main6(argc, argv);
+    main7(argc, argv);
     return 0;
 }

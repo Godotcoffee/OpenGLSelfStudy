@@ -1,0 +1,1 @@
+int main7(int argc, const char *argv[]);
