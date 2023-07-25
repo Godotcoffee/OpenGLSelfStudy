@@ -9,6 +9,7 @@
 
 #include "task7.hpp"
 #include "FileShader.hpp"
+#include "CameraGL.hpp"
 
 #include <stb_image.h>
 
@@ -21,21 +22,12 @@ namespace task7 {
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-    float cameraSpeedRatio = 5.0f;
-
-    float pitch = 0.0f;
-    float yaw = -90.0f;
-
     float lastX = 400;
     float lastY = 300;
 
-    float fov = 45.0f;
-
     bool firstMouse = true;
 
-    glm::vec3 cameraPos(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+    CameraGL camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
     void processInput(GLFWwindow *window) {
         if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -50,24 +42,20 @@ namespace task7 {
             mixValue = std::max(0.0f, mixValue - 0.001f);
         }
 
-        const float cameraSpeed = deltaTime * cameraSpeedRatio;
-
-        auto tmpFront = glm::normalize(glm::vec3(cameraFront.x, 0, cameraFront.z));
-
-        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            cameraPos += tmpFront * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            camera.processKeyboard(Camera_Movement::FORWARD, deltaTime);
         }
 
-        if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            cameraPos -= tmpFront * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            camera.processKeyboard(Camera_Movement::BACKWARD, deltaTime);
         }
 
-        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-            cameraPos -= glm::normalize(glm::cross(tmpFront, cameraUp)) * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            camera.processKeyboard(Camera_Movement::LEFT, deltaTime);
         }
 
-        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-            cameraPos += glm::normalize(glm::cross(tmpFront, cameraUp)) * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            camera.processKeyboard(Camera_Movement::RIGHT, deltaTime);
         }
         //cameraPos.y = 0;
     }
@@ -83,25 +71,11 @@ namespace task7 {
         lastX = xpos;
         lastY = ypos;
 
-        const float sensitivity = 0.03f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
-
-        yaw += xoffset;
-        pitch += yoffset;
-
-        pitch = std::min(89.0f, std::max(-89.0f, pitch));
-
-        glm::vec3 direction;
-        direction.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-        direction.y = sin(glm::radians(pitch));
-        direction.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
-
-        cameraFront = glm::normalize(direction);
+        camera.processMouseMovement(xoffset, yoffset);
     }
 
     void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-        fov = std::min(50.0f, std::max(1.0f, static_cast<float>(fov - yoffset)));
+        camera.processMouseScroll(yoffset);
     }
 
     void setMat(GLint pos, glm::mat4 matrix) {
@@ -294,12 +268,10 @@ int main7(int argc, char const *argv[])
         //float camX = sin(glfwGetTime()) * radius;
         //float camZ = cos(glfwGetTime()) * radius;
 
-        view = glm::lookAt(cameraPos,
-                           cameraPos + cameraFront,
-                           cameraUp);
+        view = camera.getViewMatrix();
 
         glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(camera.getFov()), 800.0f / 600.0f, 0.1f, 100.0f);
 
         setMat(fileShader.getUniformLoc("view"), view);
         setMat(fileShader.getUniformLoc("projection"), projection);
