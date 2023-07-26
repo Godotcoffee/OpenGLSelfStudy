@@ -56,7 +56,7 @@ int main4(int argc, char const *argv[])
         glViewport(0, 0, width, height);
     });
 
-    std::string rootpath(STRING(SOURCE_ROOT));
+    std::string rootpath(STRING(SOURCE_ROOT)); rootpath = "resources";
 
     unsigned int texture1;
     glGenTextures(1, &texture1);

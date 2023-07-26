@@ -64,7 +64,7 @@ int main3(int argc, char const *argv[])
         glViewport(0, 0, width, height);
     });
 
-    std::string rootpath(STRING(SOURCE_ROOT));
+    std::string rootpath(STRING(SOURCE_ROOT));  rootpath = "resources";
      FileShader fileShader(
          rootpath + "/shader" + "/vertex" + "/shader1.vs",
          rootpath + "/shader" + "/fragment" + "/shader1.vs");

@@ -117,8 +117,9 @@ int main7(int argc, char const *argv[])
 
     glEnable(GL_DEPTH_TEST);
 
-    std::string rootpath(STRING(SOURCE_ROOT));
-    std::cout << rootpath << std::endl;
+    //std::string rootpath(STRING(SOURCE_ROOT));
+    std::string resPath("resources");
+    std::cout << resPath << std::endl;
 
     unsigned int texture1;
     glGenTextures(1, &texture1);
@@ -131,7 +132,7 @@ int main7(int argc, char const *argv[])
 
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load((rootpath + "/texture" + "/container.jpg").c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load((resPath + "/texture" + "/container.jpg").c_str(), &width, &height, &nrChannels, 0);
 
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -150,7 +151,7 @@ int main7(int argc, char const *argv[])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load((rootpath + "/texture" + "/awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
+    data = stbi_load((resPath + "/texture" + "/awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
 
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -161,8 +162,8 @@ int main7(int argc, char const *argv[])
     stbi_image_free(data);
 
     FileShader fileShader(
-         rootpath + "/shader" + "/shader4.vs",
-         rootpath + "/shader" + "/shader4.fs");
+         resPath + "/shader" + "/shader4.vs",
+         resPath + "/shader" + "/shader4.fs");
 
     fileShader.use();
     glUniform1i(glGetUniformLocation(fileShader.getId(), "texture1"), 0);
