@@ -5,11 +5,10 @@
 #include "task5.hpp"
 #include "task6.hpp"
 #include "task7.hpp"
-
-#include <iostream>
+#include "task8.hpp"
 
 int main(int argc, char const *argv[])
 {
-    main7(argc, argv);
+    main8(argc, argv);
     return 0;
 }

@@ -87,3 +87,8 @@ void CameraGL::processMouseScroll(float yoffset)
 float CameraGL::getFov() const {
     return _fov;
 }
+
+glm::vec3 CameraGL::getCameraPos() const
+{
+    return _cameraPos;
+}

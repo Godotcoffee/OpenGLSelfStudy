@@ -66,6 +66,8 @@ public:
     void processMouseScroll(float yoffset);
 
     float getFov() const;
+
+    glm::vec3 getCameraPos() const;
 };
 
 #endif
