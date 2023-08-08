@@ -16,7 +16,7 @@
 #define STR(str) #str
 #define STRING(str) STR(str)
 
-namespace task8 {
+namespace task9 {
     float mixValue = 0.2f;
 
     float deltaTime = 0.0f;
@@ -80,14 +80,14 @@ namespace task8 {
         camera.processMouseScroll(yoffset);
     }
 
-    void setMat(GLint pos, glm::mat4 matrix) {
-        glUniformMatrix4fv(pos, 1, GL_FALSE, glm::value_ptr(matrix));
-    }
+    // void setMat(GLint pos, glm::mat4 matrix) {
+    //     glUniformMatrix4fv(pos, 1, GL_FALSE, glm::value_ptr(matrix));
+    // }
 }
 
-int main8(int argc, char const *argv[])
+int main9(int argc, char const *argv[])
 {
-    using namespace task8;
+    using namespace task9;
 
     glfwInit();
 
@@ -146,13 +146,13 @@ int main8(int argc, char const *argv[])
     }
     stbi_image_free(data);
 
-    FileShader fileShader(
-         resPath + "/shader" + "/shader5.vs",
-         resPath + "/shader" + "/shader5.fs");
+    FileShader lightingShader(
+         resPath + "/shader" + "/shader6.vs",
+         resPath + "/shader" + "/shader6.fs");
 
     FileShader lightShader(
-         resPath + "/shader" + "/shader5_light.vs",
-         resPath + "/shader" + "/shader5_light.fs");
+         resPath + "/shader" + "/shader6_light.vs",
+         resPath + "/shader" + "/shader6_light.fs");
 
     float vertices[] = {
          0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  0.0f,  1.0f, 
@@ -202,8 +202,8 @@ int main8(int argc, char const *argv[])
         glm::vec3( 0.0f, -0.0f,  0.0f),
     };
 
-    fileShader.use();
-    glUniform1i(glGetUniformLocation(fileShader.getId(), "texture1"), 0);
+    lightingShader.use();
+    glUniform1i(glGetUniformLocation(lightingShader.getId(), "texture1"), 0);
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -253,13 +253,26 @@ int main8(int argc, char const *argv[])
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        float rotatedAngle = (float) glfwGetTime() * 100;
+        float rotatedAngle = currentFrame * 100;
         float radio = std::sqrt(lightPos.x * lightPos.x + lightPos.z * lightPos.z);
         float rotatedX = glm::cos(glm::radians(rotatedAngle)) * radio;
         float rotatedZ = glm::sin(glm::radians(rotatedAngle)) * radio;
 
+        glm::vec3 lightColor;
+        lightColor.x = (sin(currentFrame * 0.1f * 2.0f) + 1.0f) / 2.0f;
+        lightColor.y = (sin(currentFrame * 0.1f * 0.7) + 1.0f) / 2.0f;
+        lightColor.z = (sin(currentFrame * 0.1f * 1.3f) + 1.0f) / 2.0f;
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
+        glm::vec3 ambientColor = lightColor * glm::vec3(0.2f);
 
-        fileShader.use();
+        // lightColor.x = 1.0f;
+        // lightColor.y = 1.0f;
+        // lightColor.z = 1.0f;
+        // glm::vec3 diffuseColor = lightColor * glm::vec3(1.0f);
+        // glm::vec3 ambientColor = lightColor * glm::vec3(1.0f);
+        
+
+        lightingShader.use();
         glBindVertexArray(VAO);
 
         glActiveTexture(GL_TEXTURE0);
@@ -268,11 +281,19 @@ int main8(int argc, char const *argv[])
         // glActiveTexture(GL_TEXTURE1);
         // glBindTexture(GL_TEXTURE_2D, texture2);
 
-        glUniform3f(fileShader.getUniformLoc("objectColor"), 1.0f, 0.5f, 0.31f);
-        glUniform3f(fileShader.getUniformLoc("lightColor"), 1.0f, 1.0f, 1.0f);
-        glUniform3f(fileShader.getUniformLoc("lightPos"), rotatedX, lightPos.y, rotatedZ);
+        glUniform3f(lightingShader.getUniformLoc("objectColor"), 1.0f, 0.5f, 0.31f);
         const auto &cameraPos = camera.getCameraPos();
-        glUniform3f(fileShader.getUniformLoc("viewPos"), cameraPos.x, cameraPos.y, cameraPos.z);
+        glUniform3f(lightingShader.getUniformLoc("viewPos"), cameraPos.x, cameraPos.y, cameraPos.z);
+
+        lightingShader.setVec3("material.ambient", 0.0f, 0.1f, 0.06f);
+        lightingShader.setVec3("material.diffuse", 0.0f, 0.50980392f, 0.50980392f);
+        lightingShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+        lightingShader.setFloat("material.shininess", 32.0f);
+
+        lightingShader.setVec3("light.position", rotatedX, lightPos.y, rotatedZ);
+        lightingShader.setVec3("light.ambient", ambientColor);
+        lightingShader.setVec3("light.diffuse", diffuseColor);
+        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
         glm::mat4 view;
 
@@ -284,26 +305,33 @@ int main8(int argc, char const *argv[])
         glm::mat4 projection = glm::mat4(1.0f);
         projection = glm::perspective(glm::radians(camera.getFov()), 800.0f / 600.0f, 0.1f, 100.0f);
 
-        setMat(fileShader.getUniformLoc("view"), view);
-        setMat(fileShader.getUniformLoc("projection"), projection);
+        lightingShader.setMat4("view", view);
+        lightingShader.setMat4("projection", projection);
+        // setMat(fileShader.getUniformLoc("view"), view);
+        // setMat(fileShader.getUniformLoc("projection"), projection);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[0]);
         model = glm::rotate(model, (float) glfwGetTime() * 0.1f, {-1.0f, 1.0f, 0.0f});
-        setMat(fileShader.getUniformLoc("model"), model);
+        lightingShader.setMat4("model", model);
+
         
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         lightShader.use();
         glBindVertexArray(lightVAO);
 
-        setMat(lightShader.getUniformLoc("view"), view);
-        setMat(lightShader.getUniformLoc("projection"), projection);
+        lightShader.setMat4("view", view);
+        lightShader.setMat4("projection", projection);
+        lightShader.setVec3("objectColor", lightColor);
+        // setMat(lightShader.getUniformLoc("view"), view);
+        // setMat(lightShader.getUniformLoc("projection"), projection);
 
         model = glm::mat4(1.0f);
         model = glm::translate(model, {rotatedX, lightPos.y, rotatedZ});
         model = glm::scale(model, glm::vec3 {0.2f, 0.2f, 0.2f});
-        setMat(lightShader.getUniformLoc("model"), model);
+        lightShader.setMat4("model", model);
+
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         //glUseProgram(shaderProgram);
