@@ -7,9 +7,10 @@
 #include "task7.hpp"
 #include "task8.hpp"
 #include "task9.hpp"
+#include "task10.hpp"
 
 int main(int argc, char const *argv[])
 {
-    main9(argc, argv);
+    main10(argc, argv);
     return 0;
 }
