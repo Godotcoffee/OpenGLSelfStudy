@@ -26,11 +26,11 @@ void StringShader::init(const char *vertexShaderSource, const char *fragmentShad
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
     glCompileShader(fragmentShader);
 
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
         char infoLog[512];
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
                   << infoLog << std::endl;
     }

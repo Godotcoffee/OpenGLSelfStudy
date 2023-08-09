@@ -92,3 +92,8 @@ glm::vec3 CameraGL::getCameraPos() const
 {
     return _cameraPos;
 }
+
+glm::vec3 CameraGL::getCameraFront() const
+{
+    return _cameraFront;
+}

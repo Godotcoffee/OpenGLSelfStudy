@@ -68,6 +68,8 @@ public:
     float getFov() const;
 
     glm::vec3 getCameraPos() const;
+
+    glm::vec3 getCameraFront() const;
 };
 
 #endif
