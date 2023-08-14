@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 3.27)
 project(opengl-learning)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 
 # if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 #     message(${CMAKE_BUILD_TYPE})
@@ -26,12 +26,17 @@ target_include_directories(gl_test PUBLIC ${PROJECT_SOURCE_DIR}/src/task/include
 target_include_directories(gl_test PUBLIC ${PROJECT_SOURCE_DIR}/third_party/glad/include/)
 target_include_directories(gl_test PRIVATE ${PROJECT_SOURCE_DIR}/third_party/stb/include/)
 target_include_directories(gl_test PUBLIC ${PROJECT_SOURCE_DIR}/third_party/glm/include/)
-target_link_libraries(gl_test PUBLIC glad)
+target_link_libraries(gl_test PRIVATE glad)
 
 set(GLFW_DIR ${PROJECT_SOURCE_DIR}/third_party/glfw-3.3.8)
-target_include_directories(gl_test PRIVATE ${GLFW_DIR}/include/)
+#target_include_directories(gl_test PRIVATE ${GLFW_DIR}/include/)
 add_subdirectory(${GLFW_DIR})
 target_link_libraries(gl_test PRIVATE glfw)
+
+set(ASSIMP_DIR ${PROJECT_SOURCE_DIR}/third_party/assimp)
+#target_include_directories(gl_test PRIVATE ${ASSIMP_DIR}/include/)
+add_subdirectory(${ASSIMP_DIR})
+target_link_libraries(gl_test PRIVATE assimp)
 
 # add_custom_target(res_target ALL DEPENDS ${PROJECT_BINARY_DIR}/resources)
 # add_custom_command(

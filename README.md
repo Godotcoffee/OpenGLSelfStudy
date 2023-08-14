@@ -12,7 +12,8 @@ These example codes were written and tested under the following environments:
 
 - Operation System: Windows 11
 - Build Tool: CMake
-- Compiler: GCC (via MinGW)
+- Compiler: MSVC (tested in version 17.6.3.22601)
 - OpenGL Libraries: GLFW, GLAD
 - Image Library: stb_image
 - Mathematics Library: GLM
+- Model Library: assimp
